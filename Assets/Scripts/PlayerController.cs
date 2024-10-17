@@ -4,17 +4,28 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private Tilemap2D tilemap2D;
     private Movement2D movement2D;
 
-    public void Setup(Vector2Int position)
+    private float deathLimitY;
+
+    public void Setup(Vector2Int position, int mapSizeY)
     {
         movement2D = GetComponent<Movement2D>();
 
         transform.position = new Vector3(position.x, position.y, 0);
+
+        deathLimitY = -mapSizeY / 2;
     }
 
     private void Update()
     {
+        if(transform.position.y <= deathLimitY)
+        {
+            Debug.Log("플레이어 사망");
+        }
+
         UpdateMove();
     }
 
@@ -29,7 +40,8 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.tag.Equals("Item"))
         {
-            Destroy(collision.gameObject);
+            //    Destroy(collision.gameObject);
+            tilemap2D.GetCoin(collision.gameObject);
         }
     }
 }

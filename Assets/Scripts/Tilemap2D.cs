@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Tilemap2D : MonoBehaviour
 {
+    [Header("Common")]
+    [SerializeField]
+    private StageController stageController;
+
     [Header("Tile")]
     [SerializeField]
     private GameObject tilePrefab;
@@ -11,6 +15,9 @@ public class Tilemap2D : MonoBehaviour
     [Header("Item")]
     [SerializeField]
     private GameObject itemPrefab;
+
+    private int maxCoinCount = 0;
+    private int currentCoinCount = 0;
 
     public void GenerateTileMap(MapData mapData)
     {
@@ -40,6 +47,8 @@ public class Tilemap2D : MonoBehaviour
                 }
             }
         }
+
+        currentCoinCount = maxCoinCount;
     }
 
     private void SpawnTile(TileType tileType, Vector3 position)
@@ -58,6 +67,19 @@ public class Tilemap2D : MonoBehaviour
         GameObject clone = Instantiate(itemPrefab, position, Quaternion.identity);
 
         clone.name = "Item";
-        clone.transform.SetParent(transform);   
+        clone.transform.SetParent(transform);
+        maxCoinCount++;
+    }
+
+    public void GetCoin(GameObject coin)
+    {
+        currentCoinCount--;
+
+        coin.GetComponent<Item>().Exit();
+
+        if(currentCoinCount == 0)
+        {
+            stageController.GameClear();
+        }
     }
 }

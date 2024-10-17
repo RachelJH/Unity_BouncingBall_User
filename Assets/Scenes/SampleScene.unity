@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5d7cba6fff86b9438e2146bb308bf11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageController: {fileID: 375215985}
   tilePrefab: {fileID: 7881928943900404631, guid: e02163af0e2cb584daa989d5e47f5f80, type: 3}
   itemPrefab: {fileID: 654724779542539897, guid: 305514203f6b4a44b90ed7cb906bd6f8, type: 3}
 --- !u!4 &501481823
@@ -407,6 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 375d1850c29f3e4449be4f2a21e8b295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilemap2D: {fileID: 501481822}
 --- !u!212 &1748008953
 SpriteRenderer:
   m_ObjectHideFlags: 0
