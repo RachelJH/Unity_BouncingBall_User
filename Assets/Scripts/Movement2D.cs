@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MoveType { Left =-1, UpDown =0, Right = 1 };
 public class Movement2D : MonoBehaviour
 {
     [Header("Raycast Collision")]
@@ -31,9 +32,16 @@ public class Movement2D : MonoBehaviour
     private ColliderCorenr colliderCorner;
     private CollisionChecker collisionChecker;
 
+    public CollisionChecker IsCollision => collisionChecker;
+    public Transform HitTransform { private set; get; }
+
+    public MoveType MoveType { private set; get; }
+
     private void Awake()
     {
         collider2D = GetComponent<Collider2D>();
+
+        MoveType = MoveType.UpDown;
     }
 
     private void Update()
@@ -49,13 +57,19 @@ public class Movement2D : MonoBehaviour
             velocity.y = 0;
         }
 
-        JumpTo();
+        //JumpTo();
     }
 
     private void UpdateMovement()
     {
-        velocity.y += gravity * Time.deltaTime;
-
+        if (MoveType == MoveType.UpDown)
+        {
+            velocity.y += gravity * Time.deltaTime;
+        }
+        else
+        {
+            velocity.x = (int)MoveType * moveSpeed;
+        }
         Vector3 currentVelocity = velocity * Time.deltaTime;
 
         if (currentVelocity.x != 0)
@@ -73,15 +87,35 @@ public class Movement2D : MonoBehaviour
 
     public void MoveTo(float x)
     {
+        if(x!=0 && MoveType != MoveType.UpDown)
+        {
+            MoveType = MoveType.UpDown;
+        }
+
         velocity.x = x * moveSpeed;
     }
 
-    public void JumpTo()
+    public void JumpTo(float jumpForce = 0)
     {
-        if(collisionChecker.down)
+        if(jumpForce !=0)
         {
             velocity.y = jumpForce;
+            return;
         }
+
+        if(collisionChecker.down)
+        {
+            velocity.y = this.jumpForce;
+        }
+    }
+
+    public void SetupStraightMove(MoveType moveType, Vector3 position)
+    {
+        MoveType = moveType;
+
+        transform.position = position;
+
+        velocity.y = 0;
     }
 
     private void RayCastsHorizontal(ref Vector3 velocity)
@@ -132,6 +166,8 @@ public class Movement2D : MonoBehaviour
 
                 collisionChecker.down = direction == -1;
                 collisionChecker.up = direction == 1;
+
+                HitTransform = hit.transform;
             }
 
             Debug.DrawLine(rayPosition, rayPosition + Vector2.up * direction * distance, Color.yellow);

@@ -23,10 +23,11 @@ public class PlayerController : MonoBehaviour
     {
         if(transform.position.y <= deathLimitY)
         {
-            Debug.Log("플레이어 사망");
+            SceneLoader.LoadScene();
         }
 
         UpdateMove();
+        UpdateCollision();
     }
 
     private void UpdateMove()
@@ -35,6 +36,28 @@ public class PlayerController : MonoBehaviour
 
         movement2D.MoveTo(x);
     }
+
+    private void UpdateCollision()
+    {
+        if (movement2D.IsCollision.up)
+        {
+            CollisionToTile(CollisionDirection.Up);
+        }
+        else if(movement2D.IsCollision.down)
+        {
+            CollisionToTile(CollisionDirection.Down);
+        }
+    }
+
+    private void CollisionToTile(CollisionDirection direction)
+    {
+        Tile tile = movement2D.HitTransform.GetComponent<Tile>();
+        if(tile != null)
+        {
+            tile.Collision(direction);
+        }
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
